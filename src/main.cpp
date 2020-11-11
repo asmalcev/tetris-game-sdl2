@@ -33,11 +33,6 @@ int main() {
   SDL_SetWindowTitle(window, "Tetris");
   // SDL_ShowCursor(1); -- use in future to change cursor mb
 
-  Button btn(renderer, 20, 20, 160, 36, "START");
-  Button btn2(renderer, 20, 68, 160, 36, "LEADERBOARD");
-  Button btn3(renderer, 20, 116, 160, 36, "AUTHOR");
-  Button btn4(renderer, 20, 164, 160, 36, "QUIT");
-
   /*
    *
    * Runtime
@@ -46,6 +41,14 @@ int main() {
   */
   SDL_Event e;
   bool running = true;
+
+  Button btn(renderer, 20, 20, 160, 36, "START");
+  Button btn2(renderer, 20, 68, 160, 36, "LEADERBOARD");
+  Button btn3(renderer, 20, 116, 160, 36, "AUTHOR");
+  Button btn4(renderer, 20, 164, 160, 36, "QUIT", [&running]() {
+    running = false;
+  });
+
   while (running) {
     SDL_SetRenderDrawColor( renderer, 33, 33, 33, 255 );
     SDL_RenderClear(renderer);

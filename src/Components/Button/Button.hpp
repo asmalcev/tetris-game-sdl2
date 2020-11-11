@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <string>
+#include <functional>
 
 enum ButtonState {
   NORMAL,
@@ -16,6 +17,8 @@ private:
   float dTimer;
   ButtonState bs;
   SDL_Texture* btnTexture;
+  std::function<void()> m_funcPtr;
+  int offset;
 
 public:
   Button(
@@ -24,12 +27,14 @@ public:
     int y,
     int w,
     int h,
-    std::string text
+    std::string text,
+    std::function<void()> funcPtr = nullptr
   );
-  SDL_Rect getRect(void);
+  ~Button();
+  SDL_Rect getRect();
   void render();
   void update();
-  bool hover(int, int);
-  bool click(int, int);
+  bool hover(int x, int y);
+  bool click(int x, int y);
 
 };
