@@ -36,10 +36,6 @@ Button::~Button() {
   SDL_DestroyTexture(btnTexture);
 }
 
-SDL_Rect Button::getRect(void) {
-  return box;
-}
-
 void Button::render() {
   SDL_SetRenderDrawColor( renderer, 245, 245, 245, 255 );
   SDL_RenderFillRect( renderer, &box );

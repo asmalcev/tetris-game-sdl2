@@ -31,7 +31,6 @@ public:
     std::function<void()> funcPtr = nullptr
   );
   ~Button();
-  SDL_Rect getRect();
   void render();
   void update();
   bool hover(int x, int y);
