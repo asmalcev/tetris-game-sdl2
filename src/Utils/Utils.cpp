@@ -29,3 +29,18 @@ SDL_Surface* renderText(
   TTF_CloseFont(fnt);
   return surf;
 }
+
+int openURL(const char *url) {
+  #ifdef _WIN32
+    HINSTANCE res;
+    CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
+        COINIT_DISABLE_OLE1DDE);
+    res = ShellExecute(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL);
+    CoUninitialize();
+    return (res > (HINSTANCE)32);
+  #else
+    char buf[1024];
+    snprintf(buf, sizeof(buf), "xdg-open %s", url);
+    return (system(buf) != -1);
+  #endif
+}

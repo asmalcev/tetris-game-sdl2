@@ -1,5 +1,7 @@
 #include "Menu.hpp"
 #include "../../Utils/Utils.hpp"
+#include <cmath>
+#include <time.h>
 
 Menu::Menu(
   SDL_Renderer* renderer,
@@ -11,16 +13,26 @@ Menu::Menu(
     box({x, y, w, h})
 {
   int tw, th;
-  SDL_Surface * textSurf = renderText("MENU", {245, 245, 245}, 32, "docs/RobotoMono-Regular.ttf", &tw, &th);
+  SDL_Surface * textSurf = renderText("MENU", {245, 245, 245}, 48, "docs/RobotoMono-Regular.ttf", &tw, &th);
   textPos = { (box.w - tw) / 2, 30, tw, th};
   menuTexture = SDL_CreateTextureFromSurface(renderer, textSurf);
   SDL_FreeSurface(textSurf);
+
+  srand(time(0));
+  for (int i = 0; i < 20; i++) {
+    points.push_back(
+      new FallingPoint(renderer, rand() % box.w, -(rand() % box.h), 2)
+    );
+  }
 }
 
 Menu::~Menu() {
   SDL_DestroyTexture(menuTexture);
   for (auto btn : btns) {
     delete btn;
+  }
+  for (auto point : points) {
+    delete point;
   }
 }
 
@@ -30,6 +42,10 @@ void Menu::render() {
 
 void Menu::update() {
   render();
+
+  for (auto point : points) {
+    point->update();
+  }
 
   for (auto btn : btns) {
     btn->update();

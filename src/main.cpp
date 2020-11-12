@@ -2,11 +2,11 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
+#include "include.hpp"
 #include "Components/Button/Button.hpp"
 #include "Components/Menu/Menu.hpp"
-
-constexpr unsigned int WINDOW_WIDTH = 640;
-constexpr unsigned int WINDOW_HEIGHT = 480;
+#include "Components/Author/Author.hpp"
+#include "Utils/Utils.hpp"
 
 int main() {
   /*
@@ -35,6 +35,14 @@ int main() {
   // SDL_ShowCursor(1); -- use in future to change cursor mb
 
   /*
+   * 2nd window for author section
+   * 
+  */
+  SDL_Window * window2 = nullptr;
+  SDL_Renderer * renderer2 = nullptr;
+  // SDL_OpenUrl
+
+  /*
    *
    * Runtime
    *
@@ -43,12 +51,30 @@ int main() {
   SDL_Event e;
   bool running = true;
   Menu menu(renderer, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+  Author * auth = nullptr;
   
   constexpr int BUTTON_WIDTH = 160;
   constexpr int BUTTON_HEIGHT = 36;
   menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 164, BUTTON_WIDTH, BUTTON_HEIGHT, "START"));
   menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 212, BUTTON_WIDTH, BUTTON_HEIGHT, "LEADERBOARD"));
-  menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 260, BUTTON_WIDTH, BUTTON_HEIGHT, "AUTHOR"));
+  menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 260, BUTTON_WIDTH, BUTTON_HEIGHT, "AUTHOR",
+    [&window2, &renderer2, &auth]() {
+      if (window2 == nullptr) {
+        if (SDL_CreateWindowAndRenderer(WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN, &window2, &renderer2) < 0) {
+          std::cout << "Failed at SDL_CreateWindowAndRenderer" << std::endl;
+          SDL_Quit();
+          return 1;
+        }
+        SDL_SetWindowTitle(window2, "Author");
+
+        SDL_SetRenderDrawColor( renderer2, 33, 33, 33, 255 );
+        SDL_RenderClear(renderer2);
+        auth = new Author(renderer2, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+        SDL_RenderPresent(renderer2);
+      }
+      // openURL("https://github.com/qzerrty");
+    }));
   menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 308, BUTTON_WIDTH, BUTTON_HEIGHT, "QUIT", [&running]() {
     running = false;
   }));
@@ -56,17 +82,35 @@ int main() {
   while (running) {
     SDL_SetRenderDrawColor( renderer, 33, 33, 33, 255 );
     SDL_RenderClear(renderer);
-    while (SDL_PollEvent(&e))
-    {
+    while (SDL_PollEvent(&e)) {
       if (e.type == SDL_QUIT) {
         running = false;
         break;
       }
-      if (e.type == SDL_MOUSEBUTTONDOWN) {
-        menu.click(e.motion.x, e.motion.y);
-      }
-      if (e.type == SDL_MOUSEMOTION) {
-        menu.hover(e.motion.x, e.motion.y);
+      if (SDL_GetWindowID(window) == e.window.windowID) {
+        if (e.type == SDL_WINDOWEVENT) {
+          if (e.window.event == SDL_WINDOWEVENT_CLOSE) {
+            running = false;
+            break;
+          }
+        }
+        if (e.type == SDL_MOUSEBUTTONDOWN) {
+          menu.click(e.motion.x, e.motion.y);
+        }
+        if (e.type == SDL_MOUSEMOTION) {
+          menu.hover(e.motion.x, e.motion.y);
+        }
+      } else {
+        if (e.type == SDL_WINDOWEVENT) {
+          if (e.window.event == SDL_WINDOWEVENT_CLOSE) {
+            SDL_DestroyRenderer(renderer2);
+            SDL_DestroyWindow(window2);
+            delete auth;
+            renderer2 = nullptr;
+            window2 = nullptr;
+            auth = nullptr;
+          }
+        }
       }
     }
     menu.update();
@@ -83,6 +127,11 @@ int main() {
   */
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
+  if (window2 != nullptr) {
+    SDL_DestroyRenderer(renderer2);
+    SDL_DestroyWindow(window2);
+    delete auth;
+  }
   TTF_Quit();
   SDL_Quit();
 }
