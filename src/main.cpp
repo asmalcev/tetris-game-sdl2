@@ -44,10 +44,12 @@ int main() {
   bool running = true;
   Menu menu(renderer, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
   
-  menu.btns.push_back(new Button(renderer, 20, 20, 160, 36, "START"));
-  menu.btns.push_back(new Button(renderer, 20, 68, 160, 36, "LEADERBOARD"));
-  menu.btns.push_back(new Button(renderer, 20, 116, 160, 36, "AUTHOR"));
-  menu.btns.push_back(new Button(renderer, 20, 164, 160, 36, "QUIT", [&running]() {
+  constexpr int BUTTON_WIDTH = 160;
+  constexpr int BUTTON_HEIGHT = 36;
+  menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 164, BUTTON_WIDTH, BUTTON_HEIGHT, "START"));
+  menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 212, BUTTON_WIDTH, BUTTON_HEIGHT, "LEADERBOARD"));
+  menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 260, BUTTON_WIDTH, BUTTON_HEIGHT, "AUTHOR"));
+  menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 308, BUTTON_WIDTH, BUTTON_HEIGHT, "QUIT", [&running]() {
     running = false;
   }));
 
@@ -61,10 +63,10 @@ int main() {
         break;
       }
       if (e.type == SDL_MOUSEBUTTONDOWN) {
-        
+        menu.click(e.motion.x, e.motion.y);
       }
       if (e.type == SDL_MOUSEMOTION) {
-      
+        menu.hover(e.motion.x, e.motion.y);
       }
     }
     menu.update();

@@ -30,4 +30,20 @@ void Menu::render() {
 
 void Menu::update() {
   render();
+
+  for (auto btn : btns) {
+    btn->update();
+  }
+}
+
+void Menu::click(int x, int y) {
+  for (auto btn : btns) {
+    if (btn->click(x, y)) break;
+  }
+}
+
+void Menu::hover(int x, int y) {
+  for (auto btn : btns) {
+    if (btn->hover(x, y)) break;
+  }
 }
