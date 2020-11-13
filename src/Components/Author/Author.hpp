@@ -1,10 +1,12 @@
 #pragma once
 #include <SDL2/SDL.h>
+#include "../Link/Link.hpp"
 
 class Author {
 private:
   SDL_Renderer* renderer = nullptr;
-  SDL_Rect box, textPos;
+  SDL_Rect box;
+  Link * githubLink;
 
 public:
   Author(
@@ -14,6 +16,5 @@ public:
     int w,
     int h
   );
-  ~Author() {}
   void click(int x, int y);
 };

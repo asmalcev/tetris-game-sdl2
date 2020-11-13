@@ -6,7 +6,6 @@
 #include "Components/Button/Button.hpp"
 #include "Components/Menu/Menu.hpp"
 #include "Components/Author/Author.hpp"
-#include "Utils/Utils.hpp"
 
 int main() {
   /*
@@ -73,7 +72,6 @@ int main() {
 
         SDL_RenderPresent(renderer2);
       }
-      // openURL("https://github.com/qzerrty");
     }));
   menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 308, BUTTON_WIDTH, BUTTON_HEIGHT, "QUIT", [&running]() {
     running = false;
@@ -100,7 +98,7 @@ int main() {
         if (e.type == SDL_MOUSEMOTION) {
           menu.hover(e.motion.x, e.motion.y);
         }
-      } else {
+      } else if (window2 != nullptr) {
         if (e.type == SDL_WINDOWEVENT) {
           if (e.window.event == SDL_WINDOWEVENT_CLOSE) {
             SDL_DestroyRenderer(renderer2);
@@ -110,6 +108,9 @@ int main() {
             window2 = nullptr;
             auth = nullptr;
           }
+        }
+        if (e.type == SDL_MOUSEBUTTONDOWN) {
+          auth->click(e.motion.x, e.motion.y);
         }
       }
     }
