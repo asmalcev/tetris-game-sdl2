@@ -5,6 +5,7 @@
 #include "include.hpp"
 #include "Components/Button/Button.hpp"
 #include "Components/Menu/Menu.hpp"
+#include "Components/Presenter/Presenter.hpp"
 #include "Components/Author/Author.hpp"
 
 int main() {
@@ -49,12 +50,19 @@ int main() {
   */
   SDL_Event e;
   bool running = true;
+  Window * currentWindow = nullptr;
   Menu menu(renderer, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+  Presenter pres(renderer, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
   Author * auth = nullptr;
   
   constexpr int BUTTON_WIDTH = 160;
   constexpr int BUTTON_HEIGHT = 36;
-  menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 164, BUTTON_WIDTH, BUTTON_HEIGHT, "START"));
+  menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 164, BUTTON_WIDTH, BUTTON_HEIGHT, "START",
+    [&currentWindow, &pres]() {
+      if (currentWindow != &pres) {
+        currentWindow = &pres;
+      }
+    }));
   menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 212, BUTTON_WIDTH, BUTTON_HEIGHT, "LEADERBOARD"));
   menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 260, BUTTON_WIDTH, BUTTON_HEIGHT, "AUTHOR",
     [&window2, &renderer2, &auth]() {
@@ -77,6 +85,15 @@ int main() {
     running = false;
   }));
 
+  pres.backBtn = new Button(renderer, 36, 36, 50, BUTTON_HEIGHT, "BACK",
+    [&currentWindow, &menu]() {
+      if (currentWindow != &menu) {
+        currentWindow = &menu;
+      }
+  });
+
+  currentWindow = &menu;
+
   while (running) {
     SDL_SetRenderDrawColor( renderer, 33, 33, 33, 255 );
     SDL_RenderClear(renderer);
@@ -93,10 +110,10 @@ int main() {
           }
         }
         if (e.type == SDL_MOUSEBUTTONDOWN) {
-          menu.click(e.motion.x, e.motion.y);
+          currentWindow->click(e.motion.x, e.motion.y);
         }
         if (e.type == SDL_MOUSEMOTION) {
-          menu.hover(e.motion.x, e.motion.y);
+          currentWindow->hover(e.motion.x, e.motion.y);
         }
       } else if (window2 != nullptr) {
         if (e.type == SDL_WINDOWEVENT) {
@@ -114,7 +131,7 @@ int main() {
         }
       }
     }
-    menu.update();
+    currentWindow->update();
 
     SDL_RenderPresent(renderer);
     SDL_Delay(16);

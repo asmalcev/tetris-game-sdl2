@@ -1,26 +1,21 @@
 #pragma once
 #include "../Window/Window.hpp"
-#include <vector>
 #include "../Button/Button.hpp"
-#include "FallingPoint.hpp"
 
-class Menu : public Window {
+class Presenter : public Window {
 private:
-  SDL_Rect textPos;
-  SDL_Texture* menuTexture;
-  std::vector<FallingPoint*> points;
 
 public:
-  std::vector<Button*> btns;
-  
-  Menu(
+  Button * backBtn = nullptr;
+
+  Presenter(
     SDL_Renderer* renderer,
     int x,
     int y,
     int w,
     int h
   );
-  ~Menu();
+  ~Presenter();
   void render() override;
   void update() override;
   void click(int x, int y) override;

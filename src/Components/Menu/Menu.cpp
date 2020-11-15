@@ -9,8 +9,7 @@ Menu::Menu(
   int y,
   int w,
   int h
-) : renderer(renderer),
-    box({x, y, w, h})
+) : Window(renderer, x, y, w, h)
 {
   int tw, th;
   SDL_Surface * textSurf = renderText("MENU", {245, 245, 245}, 48, "docs/RobotoMono-Bold.ttf", &tw, &th);
