@@ -92,10 +92,11 @@ int main() {
       }
   });
 
-  currentWindow = &menu;
+  // currentWindow = &menu;
+  currentWindow = &pres;
 
   while (running) {
-    SDL_SetRenderDrawColor( renderer, 33, 33, 33, 255 );
+    SDL_SetRenderDrawColor(renderer, 33, 33, 33, 255);
     SDL_RenderClear(renderer);
     while (SDL_PollEvent(&e)) {
       if (e.type == SDL_QUIT) {
@@ -114,6 +115,9 @@ int main() {
         }
         if (e.type == SDL_MOUSEMOTION) {
           currentWindow->hover(e.motion.x, e.motion.y);
+        }
+        if (e.type == SDL_KEYUP) {
+          currentWindow->keyEvent(e);
         }
       } else if (window2 != nullptr) {
         if (e.type == SDL_WINDOWEVENT) {

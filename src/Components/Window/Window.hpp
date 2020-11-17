@@ -20,4 +20,5 @@ public:
   virtual void update() = 0;
   virtual void click(int x, int y) = 0;
   virtual void hover(int x, int y) = 0;
+  virtual void keyEvent(SDL_Event&) = 0;
 };
