@@ -61,6 +61,7 @@ int main() {
     [&currentWindow, &pres]() {
       if (currentWindow != &pres) {
         currentWindow = &pres;
+        pres.reload();
       }
     }));
   menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 212, BUTTON_WIDTH, BUTTON_HEIGHT, "LEADERBOARD"));
@@ -85,7 +86,7 @@ int main() {
     running = false;
   }));
 
-  pres.backBtn = new Button(renderer, 36, 36, 50, BUTTON_HEIGHT, "BACK",
+  pres.backBtn = new Button(renderer, 24, 24, 50, BUTTON_HEIGHT, "BACK",
     [&currentWindow, &menu]() {
       if (currentWindow != &menu) {
         currentWindow = &menu;

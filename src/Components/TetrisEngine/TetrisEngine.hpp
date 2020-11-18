@@ -13,10 +13,15 @@ private:
   Field * field;
   shape cur;
   shape next;
+  int curHeight;
+  int startHeightIndex;
+  bool paused;
 
   shape reverseCols(shape s);
   shape transpose(shape s);
-  int realSizeX(shape s, int* startIndex = nullptr);
+  int realSizeX(shape s, int * startIndex);
+  int realSizeY(shape s, int * startIndex);
+  bool check(shape s);
 
   shape blocks[7] = {
     {{{0, 0, 1, 0},
@@ -61,4 +66,5 @@ public:
   shape getCur();
   shape getNext();
   void displaceCur(int);
+  void togglePause();
 };

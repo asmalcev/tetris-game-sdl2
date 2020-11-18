@@ -2,9 +2,9 @@
 #include "../TetrisEngine/Field.hpp"
 #include <iostream>
 
-constexpr int FIELD_WIDTH = 20;
-constexpr int FIELD_HEIGHT = 30;
-constexpr int CELL_SIZE = 10;
+constexpr int FIELD_WIDTH = 10;
+constexpr int FIELD_HEIGHT = 26;
+constexpr int CELL_SIZE = 15;
 
 Presenter::Presenter(
   SDL_Renderer* renderer,
@@ -12,10 +12,10 @@ Presenter::Presenter(
   int y,
   int w,
   int h
-) : Window(renderer, x, y, w, h) {
+) : Window(renderer, x, y, w, h), counter(0) {
   tetris = new TetrisEngine(FIELD_WIDTH, FIELD_HEIGHT);
 
-  fieldBox = {100, 100, FIELD_WIDTH * CELL_SIZE, FIELD_HEIGHT * CELL_SIZE};
+  fieldBox = {48, 72, FIELD_WIDTH * CELL_SIZE, FIELD_HEIGHT * CELL_SIZE};
 }
 
 Presenter::~Presenter() {
@@ -38,21 +38,36 @@ void Presenter::render() {
   for (int i = 0; i < s.size; i++) {
     for (int j = 0; j < s.size; j++) {
       if (s.matrix[i][j]) {
-        curBox.x = fieldBox.x + (s.x + i) * CELL_SIZE;
-        curBox.y = fieldBox.y + (s.y + j) * CELL_SIZE;
-        SDL_SetRenderDrawColor(renderer, 245, 245, 245, 255);
+        curBox.x = fieldBox.x + (s.x + j) * CELL_SIZE;
+        curBox.y = fieldBox.y + (s.y + i) * CELL_SIZE;
+        SDL_SetRenderDrawColor(
+          renderer,
+          colors[s.color].r,
+          colors[s.color].g,
+          colors[s.color].b, 255
+        );
         SDL_RenderFillRect(renderer, &curBox);
         SDL_SetRenderDrawColor(renderer, 33, 33, 33, 255);
         SDL_RenderDrawRect(renderer, &curBox);
       }
+      // else {
+      //   curBox.x = fieldBox.x + (s.x + j) * CELL_SIZE;
+      //   curBox.y = fieldBox.y + (s.y + i) * CELL_SIZE;
+      //   SDL_SetRenderDrawColor(renderer, 245, 245, 245, 255);
+      //   SDL_RenderFillRect(renderer, &curBox);
+      //   SDL_SetRenderDrawColor(renderer, 33, 33, 33, 255);
+      //   SDL_RenderDrawRect(renderer, &curBox);
+      // }
     }
   }
 }
 
 void Presenter::update() {
-  tetris->update();
-  backBtn->update();
+  counter++;
+  if (!(counter % 12)) tetris->update();
+  // if (!(counter % 24)) tetris->update();
 
+  backBtn->update();
   render();
 }
 
@@ -77,5 +92,13 @@ void Presenter::keyEvent(SDL_Event& e) {
   case SDLK_SPACE:
     tetris->rotate();
     break;
+  case SDLK_ESCAPE:
+    tetris->togglePause();
+    break;
   }
+}
+
+void Presenter::reload() {
+  delete tetris;
+  tetris = new TetrisEngine(FIELD_WIDTH, FIELD_HEIGHT);
 }

@@ -7,6 +7,15 @@ class Presenter : public Window {
 private:
   TetrisEngine * tetris;
   SDL_Rect fieldBox;
+  int counter;
+
+  const SDL_Color colors[4] = {
+    // {245, 245, 245},
+    {30, 136, 229},
+    {229, 57, 53},
+    {253, 216, 53},
+    {94, 53, 177}
+  };
 
 public:
   Button * backBtn = nullptr;
@@ -24,4 +33,5 @@ public:
   void click(int x, int y) override;
   void hover(int x, int y) override;
   void keyEvent(SDL_Event&) override;
+  void reload();
 };
