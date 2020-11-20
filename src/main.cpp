@@ -58,7 +58,7 @@ int main() {
   constexpr int BUTTON_WIDTH = 160;
   constexpr int BUTTON_HEIGHT = 36;
   menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 164, BUTTON_WIDTH, BUTTON_HEIGHT, "START",
-    [&currentWindow, &pres]() {
+    [&currentWindow, &pres]{
       if (currentWindow != &pres) {
         currentWindow = &pres;
         pres.reload();
@@ -66,7 +66,7 @@ int main() {
     }));
   menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 212, BUTTON_WIDTH, BUTTON_HEIGHT, "LEADERBOARD"));
   menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 260, BUTTON_WIDTH, BUTTON_HEIGHT, "AUTHOR",
-    [&window2, &renderer2, &auth]() {
+    [&window2, &renderer2, &auth]{
       if (window2 == nullptr) {
         if (SDL_CreateWindowAndRenderer(WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN, &window2, &renderer2) < 0) {
           std::cout << "Failed at SDL_CreateWindowAndRenderer" << std::endl;
@@ -82,7 +82,7 @@ int main() {
         SDL_RenderPresent(renderer2);
       }
     }));
-  menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 308, BUTTON_WIDTH, BUTTON_HEIGHT, "QUIT", [&running]() {
+  menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 308, BUTTON_WIDTH, BUTTON_HEIGHT, "QUIT", [&running]{
     running = false;
   }));
 

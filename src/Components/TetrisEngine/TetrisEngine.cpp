@@ -5,11 +5,15 @@
 
 TetrisEngine::TetrisEngine(
   int x,
-  int y
-) : field(new Field(x, y)), paused(false) {
+  int y,
+  std::function<void()> callback
+) : field(new Field(x, y)), paused(false), callback(callback) {
   srand(time(0));
   cur = blocks[rand() % 7];
-  cur.color = rand() % 4;
+  cur.color = rand() % 5;
+
+  next = blocks[rand() % 7];
+  next.color = rand() % 5;
 
   curHeight = realSizeY(cur, &startHeightIndex);
 }
@@ -42,33 +46,47 @@ shape TetrisEngine::transpose(shape s) {
 
 void TetrisEngine::update() {
   if (paused) return;
-  if (cur.y + curHeight + startHeightIndex < (int) field->getY()) cur.y++;
+
+  shape tmp = cur;
+  tmp.y++;
+  if (check(tmp) && cur.y + curHeight + startHeightIndex < (int) field->getY()) {
+    cur.y++;
+  } else {
+    for (int i = 0; i < cur.size; i++) {
+      for (int j = 0; j < cur.size; j++) {
+        if (cur.matrix[i][j]) {
+          field->matrix[(cur.x + j) + (cur.y + i) * (int) field->getX()] = cur.color + 1;
+        }
+      }
+    }
+    cur = next;
+    curHeight = realSizeY(cur, &startHeightIndex);
+
+    next = blocks[rand() % 7];
+    next.color = rand() % 5;
+    callback();
+  }
 }
 
 void TetrisEngine::togglePause() {
   paused = !paused;
 }
 
+bool TetrisEngine::check(shape s) {
+  for (int i = 0; i < s.size; i++) {
+    for (int j = 0; j < s.size; j++) {
+      if (s.matrix[i][j] &&
+        field->matrix[(s.x + j) + (s.y + i) * (int) field->getX()]) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 void TetrisEngine::rotate() {
   if (paused) return;
-  /*
-   *
-   * 1ST WAY
-   * ban rotation if doesn't fit in field
-   * 
-  */
-  // shape tmp = reverseCols(transpose(cur));
-  // int rs, si;
-  // rs = realSizeX(tmp, &si);
-  // if (0 <= tmp.x + si && tmp.x + si + rs <= (int) field->getX()) {
-  //   cur = tmp;
-  // }
-  /*
-   *
-   * 2ND WAY
-   * rotate and then move
-   * 
-  */
+
   shape tmp = reverseCols(transpose(cur));
   int rs, si;
   rs = realSizeX(tmp, &si);
@@ -78,18 +96,16 @@ void TetrisEngine::rotate() {
   if (tmp.x + si + rs > (int) field->getX()) {
     tmp.x = (int) field->getX() - (si + rs);
   }
-  // std::cout << "width: " << rs << " ";
   rs = realSizeY(tmp, &si);
   if (tmp.y + rs + si < (int) field->getY()) {
     cur = tmp;
     curHeight = rs;
     startHeightIndex = si;
-    // std::cout << "height: " << rs << std::endl;
   }
 }
 
-Field TetrisEngine::getField() {
-  return *field;
+Field * TetrisEngine::getField() {
+  return field;
 }
 
 shape TetrisEngine::getCur() {

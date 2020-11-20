@@ -8,14 +8,17 @@ private:
   TetrisEngine * tetris;
   SDL_Rect fieldBox;
   int counter;
+  SDL_Texture* fieldTexture;
 
-  const SDL_Color colors[4] = {
-    // {245, 245, 245},
+  const SDL_Color colors[5] = {
+    {245, 245, 245},
     {30, 136, 229},
     {229, 57, 53},
     {253, 216, 53},
     {94, 53, 177}
   };
+
+  void fillTexture();
 
 public:
   Button * backBtn = nullptr;
@@ -34,4 +37,5 @@ public:
   void hover(int x, int y) override;
   void keyEvent(SDL_Event&) override;
   void reload();
+  void updateField();
 };

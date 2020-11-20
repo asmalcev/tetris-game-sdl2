@@ -4,16 +4,14 @@
 Field::Field(
   uchar x,
   uchar y
-) : x(x), y(y), matrix(new uchar[x * y]) {}
+) : x(x), y(y), matrix(new uchar[x * y]) {
+  for (int i = 0; i < x * y; i++) {
+    matrix[i] = 0;
+  }
+}
 
 Field::~Field() {
   delete[] matrix;
-}
-
-Field::Field(const Field& field) {
-  x = field.x;
-  y = field.y;
-  memcpy(matrix, field.matrix, sizeof(uchar) * x * y);
 }
 
 uchar Field::getX() {

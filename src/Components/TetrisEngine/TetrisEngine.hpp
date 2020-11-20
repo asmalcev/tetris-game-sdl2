@@ -1,5 +1,6 @@
 #pragma once
 #include "Field.hpp"
+#include <functional>
 
 struct shape {
   bool matrix[4][4];
@@ -16,6 +17,7 @@ private:
   int curHeight;
   int startHeightIndex;
   bool paused;
+  std::function<void()> callback;
 
   shape reverseCols(shape s);
   shape transpose(shape s);
@@ -57,12 +59,13 @@ private:
 public:
   TetrisEngine(
     int x,
-    int y
+    int y,
+    std::function<void()> callback
   );
   ~TetrisEngine();
   void update();
   void rotate();
-  Field getField();
+  Field * getField();
   shape getCur();
   shape getNext();
   void displaceCur(int);

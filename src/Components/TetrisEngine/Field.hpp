@@ -10,7 +10,6 @@ struct Field {
     uchar y
   );
   ~Field();
-  Field(const Field& field);
   uchar getX();
   uchar getY();
 

@@ -21,3 +21,6 @@ SDL_Surface* renderText(
 );
 
 int openURL(const char *url);
+
+Uint32 createRGB(int r, int g, int b);
+Uint32 createRGB(SDL_Color color);

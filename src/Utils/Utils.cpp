@@ -44,3 +44,11 @@ int openURL(const char *url) {
     return (system(buf) != -1);
   #endif
 }
+
+Uint32 createRGB(int r, int g, int b) {  
+  return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
+}
+
+Uint32 createRGB(SDL_Color color) {
+  return ((color.r & 0xff) << 16) + ((color.g & 0xff) << 8) + (color.b & 0xff);
+}
