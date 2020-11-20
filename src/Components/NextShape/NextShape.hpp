@@ -1,13 +1,6 @@
 #pragma once
 #include <SDL2/SDL.h>
 
-struct shape {
-  bool matrix[4][4];
-  int x, y;
-  int size;
-  int color;
-};
-
 class NextShape {
 private:
   SDL_Renderer* renderer = nullptr;
@@ -24,5 +17,6 @@ public:
   );
   ~NextShape();
   void render();
-  void update(shape);
+  void update(SDL_Texture *);
+  SDL_Rect getBox();
 };

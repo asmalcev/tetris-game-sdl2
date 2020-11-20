@@ -2,13 +2,15 @@
 #include "../Window/Window.hpp"
 #include "../Button/Button.hpp"
 #include "../TetrisEngine/TetrisEngine.hpp"
+#include "../NextShape/NextShape.hpp"
 
 class Presenter : public Window {
 private:
   TetrisEngine * tetris;
   SDL_Rect fieldBox;
   int counter;
-  SDL_Texture* fieldTexture;
+  SDL_Texture * fieldTexture;
+  NextShape * nshape;
 
   const SDL_Color colors[5] = {
     {245, 245, 245},
@@ -18,7 +20,8 @@ private:
     {94, 53, 177}
   };
 
-  void fillTexture();
+  void fillFieldTexture();
+  void fillShapeTexture();
 
 public:
   Button * backBtn = nullptr;

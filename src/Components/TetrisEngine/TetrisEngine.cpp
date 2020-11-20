@@ -11,11 +11,15 @@ TetrisEngine::TetrisEngine(
   srand(time(0));
   cur = blocks[rand() % 7];
   cur.color = rand() % 5;
+  cur.x = (x - cur.size) / 2;
 
   next = blocks[rand() % 7];
   next.color = rand() % 5;
+  next.x = (x - next.size) / 2;
+  next.y = 0;
 
   curHeight = realSizeY(cur, &startHeightIndex);
+  cur.y = 0;
 }
 
 TetrisEngine::~TetrisEngine() {
@@ -64,6 +68,8 @@ void TetrisEngine::update() {
 
     next = blocks[rand() % 7];
     next.color = rand() % 5;
+    next.x = ((int) field->getX() - next.size) / 2;
+    next.y = 0;
     callback();
   }
 }
@@ -97,7 +103,7 @@ void TetrisEngine::rotate() {
     tmp.x = (int) field->getX() - (si + rs);
   }
   rs = realSizeY(tmp, &si);
-  if (tmp.y + rs + si < (int) field->getY()) {
+  if (check(tmp) && tmp.y + rs + si < (int) field->getY()) {
     cur = tmp;
     curHeight = rs;
     startHeightIndex = si;
@@ -120,7 +126,13 @@ void TetrisEngine::displaceCur(int diff) {
   if (paused) return;
   int rs, si;
   rs = realSizeX(cur, &si);
-  if (0 <= cur.x + diff + si && cur.x + diff + si + rs <= (int) field->getX()) {
+  shape tmp = cur;
+  tmp.x += diff;
+  if (
+    0 <= cur.x + diff + si &&
+    cur.x + diff + si + rs <= (int) field->getX() &&
+    check(tmp)
+  ) {
     cur.x += diff;
   }
 }

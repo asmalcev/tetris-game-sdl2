@@ -21,8 +21,6 @@ private:
 
   shape reverseCols(shape s);
   shape transpose(shape s);
-  int realSizeX(shape s, int * startIndex);
-  int realSizeY(shape s, int * startIndex);
   bool check(shape s);
 
   shape blocks[7] = {
@@ -70,4 +68,6 @@ public:
   shape getNext();
   void displaceCur(int);
   void togglePause();
+  int realSizeX(shape s, int * startIndex);
+  int realSizeY(shape s, int * startIndex);
 };
