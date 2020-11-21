@@ -59,7 +59,7 @@ void TetrisEngine::update() {
     for (int i = 0; i < cur.size; i++) {
       for (int j = 0; j < cur.size; j++) {
         if (cur.matrix[i][j]) {
-          field->matrix[(cur.x + j) + (cur.y + i) * (int) field->getX()] = cur.color + 1;
+          field->get(cur.x + j, cur.y + i) = cur.color + 1;
         }
       }
     }
@@ -82,7 +82,7 @@ bool TetrisEngine::check(shape s) {
   for (int i = 0; i < s.size; i++) {
     for (int j = 0; j < s.size; j++) {
       if (s.matrix[i][j] &&
-        field->matrix[(s.x + j) + (s.y + i) * (int) field->getX()]) {
+        field->get(s.x + j, s.y + i)) {
         return false;
       }
     }

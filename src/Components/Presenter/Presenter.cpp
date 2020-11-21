@@ -3,7 +3,7 @@
 #include <iostream>
 #include "../../Utils/Utils.hpp"
 
-constexpr int FIELD_WIDTH = 18;
+constexpr int FIELD_WIDTH = 10;
 constexpr int FIELD_HEIGHT = 26;
 constexpr int CELL_SIZE = 15;
 constexpr int NEXT_SHAPE_CELL_SIZE = 7;
@@ -126,7 +126,7 @@ void Presenter::fillFieldTexture() {
   Field * field = tetris->getField();
   for (int i = 0; i < field->getY(); i++) {
     for (int j = 0; j < field->getX(); j++) {
-      curCell = field->matrix[field->getX() * i + j];
+      curCell = field->get(j,i);
       if (curCell) {
         curBox.x = j * CELL_SIZE;
         curBox.y = i * CELL_SIZE;

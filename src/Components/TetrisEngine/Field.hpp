@@ -1,9 +1,9 @@
 #pragma once
+#include "../LinkedList/LinkedList.hpp"
 
 typedef unsigned char uchar;
 
 struct Field {
-  uchar * matrix;
 
   Field(
     uchar x,
@@ -12,8 +12,10 @@ struct Field {
   ~Field();
   uchar getX();
   uchar getY();
+  uchar& get(int xcoord, int ycoord);
 
 private:
   uchar x;
   uchar y;
+  LinkedList * matrix;
 };
