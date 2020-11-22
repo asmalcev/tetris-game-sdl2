@@ -25,7 +25,7 @@ Button::Button(
   textSurf = renderText(text, {245, 245, 245}, 16, "docs/RobotoMono-Regular.ttf", &tw, &th);
   dst.x = (box.w - tw) / 2;
   dst.y = (box.h - th) / 2;
-  SDL_BlitSurface( textSurf, NULL, surf, &dst);
+  SDL_BlitSurface(textSurf, NULL, surf, &dst);
 
   btnTexture = SDL_CreateTextureFromSurface(renderer, surf);
   SDL_FreeSurface(textSurf);

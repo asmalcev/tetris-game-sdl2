@@ -3,11 +3,13 @@
 #include <iostream>
 #include "../../Utils/Utils.hpp"
 
-constexpr int FIELD_WIDTH = 10;
+constexpr int FIELD_WIDTH = 13;
 constexpr int FIELD_HEIGHT = 26;
 constexpr int CELL_SIZE = 15;
+constexpr int HORIZONTAL_PADDING = 128;
 constexpr int NEXT_SHAPE_CELL_SIZE = 7;
 constexpr int NEXT_SHAPE_SIZE = NEXT_SHAPE_CELL_SIZE * CELL_SIZE;
+constexpr int COUNTER_HIEGHT = 54;
 
 Presenter::Presenter(
   SDL_Renderer* renderer,
@@ -15,23 +17,37 @@ Presenter::Presenter(
   int y,
   int w,
   int h
-) : Window(renderer, x, y, w, h), counter(0), fieldTexture(nullptr) {
-  fieldBox = {48, 72, FIELD_WIDTH * CELL_SIZE, FIELD_HEIGHT * CELL_SIZE};
+) : Window(renderer, x, y, w, h), timer(0), fieldTexture(nullptr) {
+  fieldBox = {
+    HORIZONTAL_PADDING,
+    72,
+    FIELD_WIDTH * CELL_SIZE,
+    FIELD_HEIGHT * CELL_SIZE
+  };
 
-  nshape = new NextShape(
+  nshape = new VisibleElement(
     renderer,
-    box.w - 48 - NEXT_SHAPE_SIZE,
+    box.w - HORIZONTAL_PADDING - NEXT_SHAPE_SIZE,
     72,
     NEXT_SHAPE_SIZE,
     NEXT_SHAPE_SIZE
+  );
+  counter = new VisibleElement(
+    renderer,
+    box.w - HORIZONTAL_PADDING - NEXT_SHAPE_SIZE,
+    84 + NEXT_SHAPE_SIZE,
+    NEXT_SHAPE_SIZE,
+    COUNTER_HIEGHT
   );
 
   tetris = new TetrisEngine(FIELD_WIDTH, FIELD_HEIGHT, [&]{
     fillFieldTexture();
     fillShapeTexture();
+    fillCounterTexture();
   });
   fillFieldTexture();
   fillShapeTexture();
+  fillCounterTexture();
 }
 
 Presenter::~Presenter() {
@@ -39,6 +55,7 @@ Presenter::~Presenter() {
   delete tetris;
   SDL_DestroyTexture(fieldTexture);
   delete nshape;
+  delete counter;
 }
 
 void Presenter::render() {
@@ -69,12 +86,12 @@ void Presenter::render() {
 }
 
 void Presenter::update() {
-  counter++;
-  if (!(counter % 12)) tetris->update();
-  // if (!(counter % 24)) tetris->update();
+  timer++;
+  if (!(timer % 16)) tetris->update();
 
   backBtn->update();
   nshape->render();
+  counter->render();
   render();
 }
 
@@ -96,6 +113,9 @@ void Presenter::keyEvent(SDL_Event& e) {
   case SDLK_RIGHT:
     tetris->displaceCur(1);
     break;
+  case SDLK_DOWN:
+    tetris->update();
+    break;
   case SDLK_SPACE:
     tetris->rotate();
     break;
@@ -110,10 +130,12 @@ void Presenter::reload() {
   tetris = new TetrisEngine(FIELD_WIDTH, FIELD_HEIGHT, [&]{
     fillFieldTexture();
     fillShapeTexture();
+    fillCounterTexture();
   });
   
   fillFieldTexture();
   fillShapeTexture();
+  fillCounterTexture();
 }
 
 void Presenter::fillFieldTexture() {
@@ -169,5 +191,35 @@ void Presenter::fillShapeTexture() {
 
   SDL_Texture * shapeTexture = SDL_CreateTextureFromSurface(renderer, surf);
   nshape->update(shapeTexture);
+  SDL_FreeSurface(surf);
+}
+
+void Presenter::fillCounterTexture() {
+  SDL_Rect box = counter->getBox();
+  SDL_Surface * textSurf, * surf = SDL_CreateRGBSurface(0, box.w, box.h, 32, 0, 0, 0, 0);
+  SDL_FillRect(surf, NULL, 0x212121);
+
+  SDL_Rect dst = {1, 1, 0, 0};
+  int tw, th;
+  textSurf = renderText(
+    "Score",
+    {245, 245, 245}, 16,
+    "docs/RobotoMono-Regular.ttf", &tw, &th);
+  dst.x = (box.w - tw) / 2;
+  dst.y = 4;
+  SDL_BlitSurface(textSurf, NULL, surf, &dst);
+  SDL_FreeSurface(textSurf);
+
+  textSurf = renderText(
+    std::to_string(tetris->getScore()).c_str(),
+    {245, 245, 245}, 16,
+    "docs/RobotoMono-Regular.ttf", &tw, &th);
+  dst.x = (box.w - tw) / 2;
+  dst.y = 4 + th;
+  SDL_BlitSurface(textSurf, NULL, surf, &dst);
+
+  SDL_Texture * counterTexture = SDL_CreateTextureFromSurface(renderer, surf);
+  counter->update(counterTexture);
+  SDL_FreeSurface(textSurf);
   SDL_FreeSurface(surf);
 }

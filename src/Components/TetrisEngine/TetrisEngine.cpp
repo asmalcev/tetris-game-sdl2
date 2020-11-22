@@ -7,13 +7,17 @@ TetrisEngine::TetrisEngine(
   int x,
   int y,
   std::function<void()> callback
-) : field(new Field(x, y)), paused(false), callback(callback) {
+) : field(new Field(x, y)),
+    paused(false),
+    callback(callback),
+    score(0)
+{
   srand(time(0));
-  cur = blocks[rand() % 7];
+  cur = blocks[rand() % SHAPES_COUNT];
   cur.color = rand() % 5;
   cur.x = (x - cur.size) / 2;
 
-  next = blocks[rand() % 7];
+  next = blocks[rand() % SHAPES_COUNT];
   next.color = rand() % 5;
   next.x = (x - next.size) / 2;
   next.y = 0;
@@ -63,10 +67,11 @@ void TetrisEngine::update() {
         }
       }
     }
+    score += cur.size * 2 + field->fixCompletedLines() * 30;
     cur = next;
     curHeight = realSizeY(cur, &startHeightIndex);
 
-    next = blocks[rand() % 7];
+    next = blocks[rand() % SHAPES_COUNT];
     next.color = rand() % 5;
     next.x = ((int) field->getX() - next.size) / 2;
     next.y = 0;
@@ -167,4 +172,8 @@ int TetrisEngine::realSizeX(shape s, int* startIndex) {
     }
   }
   return eI - sI + 1;
+}
+
+int TetrisEngine::getScore() {
+  return score;
 }

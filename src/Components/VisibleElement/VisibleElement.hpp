@@ -1,21 +1,21 @@
 #pragma once
 #include <SDL2/SDL.h>
 
-class NextShape {
+class VisibleElement {
 private:
   SDL_Renderer* renderer = nullptr;
   SDL_Rect box;
-  SDL_Texture * shapeTexture;
+  SDL_Texture * elementTexture;
 
 public:
-  NextShape(
+  VisibleElement(
     SDL_Renderer* renderer,
     int x,
     int y,
     int w,
     int h
   );
-  ~NextShape();
+  ~VisibleElement();
   void render();
   void update(SDL_Texture *);
   SDL_Rect getBox();

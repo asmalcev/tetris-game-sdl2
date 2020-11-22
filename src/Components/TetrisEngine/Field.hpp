@@ -13,6 +13,7 @@ struct Field {
   uchar getX();
   uchar getY();
   uchar& get(int xcoord, int ycoord);
+  int fixCompletedLines();
 
 private:
   uchar x;

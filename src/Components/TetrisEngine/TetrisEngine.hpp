@@ -2,6 +2,8 @@
 #include "Field.hpp"
 #include <functional>
 
+constexpr int SHAPES_COUNT = 16;
+
 struct shape {
   bool matrix[4][4];
   int x, y;
@@ -17,13 +19,14 @@ private:
   int curHeight;
   int startHeightIndex;
   bool paused;
+  int score;
   std::function<void()> callback;
 
   shape reverseCols(shape s);
   shape transpose(shape s);
   bool check(shape s);
 
-  shape blocks[7] = {
+  shape blocks[SHAPES_COUNT] = {
     {{{0, 0, 1, 0},
       {1, 1, 1, 0},
       {0, 0, 0, 0},
@@ -52,6 +55,42 @@ private:
       {1, 1, 1, 0},
       {0, 0, 0, 0},
       {0, 0, 0, 0}}, 3, 3, 3, 0},  // T BLOCK
+    {{{1, 1, 1, 0},
+      {0, 0, 0, 0},
+      {0, 0, 0, 0},
+      {0, 0, 0, 0}}, 3, 3, 3, 0},  // CUSTOM 1 BLOCK
+    {{{1, 0, 0, 0},
+      {0, 0, 0, 0},
+      {0, 0, 0, 0},
+      {0, 0, 0, 0}}, 3, 3, 1, 0},  // CUSTOM 2 BLOCK
+    {{{1, 0, 0, 0},
+      {1, 0, 0, 0},
+      {1, 1, 1, 0},
+      {0, 0, 0, 0}}, 3, 3, 3, 0},  // CUSTOM 3 BLOCK
+    {{{1, 1, 0, 0},
+      {0, 0, 0, 0},
+      {0, 0, 0, 0},
+      {0, 0, 0, 0}}, 3, 3, 2, 0},  // CUSTOM 4 BLOCK
+    {{{1, 0, 0, 0},
+      {1, 1, 1, 0},
+      {1, 0, 0, 0},
+      {0, 0, 0, 0}}, 3, 3, 3, 0},  // CUSTOM 5 BLOCK
+    {{{1, 0, 0, 0},
+      {1, 1, 0, 0},
+      {0, 0, 0, 0},
+      {0, 0, 0, 0}}, 3, 3, 2, 0},  // CUSTOM 6 BLOCK
+    {{{1, 0, 0, 0},
+      {0, 1, 0, 0},
+      {0, 0, 0, 0},
+      {0, 0, 0, 0}}, 3, 3, 2, 0},  // CUSTOM 7 BLOCK
+    {{{1, 0, 0, 0},
+      {0, 1, 0, 0},
+      {0, 0, 1, 0},
+      {0, 0, 0, 0}}, 3, 3, 3, 0},  // CUSTOM 8 BLOCK
+    {{{1, 1, 0, 0},
+      {0, 1, 0, 0},
+      {1, 1, 0, 0},
+      {0, 0, 0, 0}}, 3, 3, 3, 0},  // CUSTOM 9 BLOCK
   };
 
 public:
@@ -70,4 +109,5 @@ public:
   void togglePause();
   int realSizeX(shape s, int * startIndex);
   int realSizeY(shape s, int * startIndex);
+  int getScore();
 };
