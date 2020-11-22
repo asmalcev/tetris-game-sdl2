@@ -9,7 +9,8 @@ TetrisEngine::TetrisEngine(
   std::function<void()> callback
 ) : field(new Field(x, y)),
     paused(false),
-    callback(callback),
+    finished(false),
+    callbackStep(callback),
     score(0)
 {
   srand(time(0));
@@ -53,7 +54,7 @@ shape TetrisEngine::transpose(shape s) {
 }
 
 void TetrisEngine::update() {
-  if (paused) return;
+  if (paused || finished) return;
 
   shape tmp = cur;
   tmp.y++;
@@ -68,14 +69,19 @@ void TetrisEngine::update() {
       }
     }
     score += cur.size * 2 + field->fixCompletedLines() * 30;
+    if (!check(next)) {
+      finished = true;
+      return;
+    }
     cur = next;
     curHeight = realSizeY(cur, &startHeightIndex);
+
 
     next = blocks[rand() % SHAPES_COUNT];
     next.color = rand() % 5;
     next.x = ((int) field->getX() - next.size) / 2;
     next.y = 0;
-    callback();
+    callbackStep();
   }
 }
 
@@ -96,7 +102,7 @@ bool TetrisEngine::check(shape s) {
 }
 
 void TetrisEngine::rotate() {
-  if (paused) return;
+  if (paused || finished) return;
 
   shape tmp = reverseCols(transpose(cur));
   int rs, si;
@@ -128,7 +134,7 @@ shape TetrisEngine::getNext() {
 }
 
 void TetrisEngine::displaceCur(int diff) {
-  if (paused) return;
+  if (paused || finished) return;
   int rs, si;
   rs = realSizeX(cur, &si);
   shape tmp = cur;

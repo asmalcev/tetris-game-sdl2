@@ -19,8 +19,10 @@ private:
   int curHeight;
   int startHeightIndex;
   bool paused;
+  bool finished;
   int score;
-  std::function<void()> callback;
+  std::function<void()> callbackStep;
+  std::function<void()> callbackWin;
 
   shape reverseCols(shape s);
   shape transpose(shape s);
