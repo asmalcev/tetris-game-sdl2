@@ -6,6 +6,8 @@
 #include "Components/Button/Button.hpp"
 #include "Components/Menu/Menu.hpp"
 #include "Components/Presenter/Presenter.hpp"
+#include "Components/LeaderBoard/LeaderBoard.hpp"
+#include "Components/LeaderBoardController/LeaderBoardController.hpp"
 #include "Components/Author/Author.hpp"
 
 int main() {
@@ -53,6 +55,7 @@ int main() {
   Window * currentWindow = nullptr;
   Menu menu(renderer, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
   Presenter pres(renderer, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+  LeaderBoard lboard(renderer, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
   Author * auth = nullptr;
   
   constexpr int BUTTON_WIDTH = 160;
@@ -64,7 +67,13 @@ int main() {
         pres.reload();
       }
     }));
-  menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 212, BUTTON_WIDTH, BUTTON_HEIGHT, "LEADERBOARD"));
+  menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 212, BUTTON_WIDTH, BUTTON_HEIGHT, "LEADERBOARD",
+    [&currentWindow, &lboard]{
+      if (currentWindow != &lboard) {
+        currentWindow = &lboard;
+        LeaderBoardController::getInstance()->getBoard();
+      }
+    }));
   menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 260, BUTTON_WIDTH, BUTTON_HEIGHT, "AUTHOR",
     [&window2, &renderer2, &auth]{
       if (window2 == nullptr) {
@@ -93,8 +102,16 @@ int main() {
       }
   });
 
-  // currentWindow = &menu;
-  currentWindow = &pres;
+  lboard.backBtn = new Button(renderer, 24, 24, 50, BUTTON_HEIGHT, "BACK",
+    [&currentWindow, &menu]() {
+      if (currentWindow != &menu) {
+        currentWindow = &menu;
+      }
+  });
+
+  currentWindow = &menu;
+  // currentWindow = &pres;
+  // currentWindow = &lboard;
 
   while (running) {
     SDL_SetRenderDrawColor(renderer, 33, 33, 33, 255);

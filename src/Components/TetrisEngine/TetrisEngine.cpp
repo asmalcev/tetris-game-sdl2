@@ -6,11 +6,13 @@
 TetrisEngine::TetrisEngine(
   int x,
   int y,
-  std::function<void()> callback
+  std::function<void()> callbackStep,
+  std::function<void()> callbackLose
 ) : field(new Field(x, y)),
     paused(false),
     finished(false),
-    callbackStep(callback),
+    callbackStep(callbackStep),
+    callbackLose(callbackLose),
     score(0)
 {
   srand(time(0));
@@ -70,6 +72,7 @@ void TetrisEngine::update() {
     }
     score += cur.size * 2 + field->fixCompletedLines() * 30;
     if (!check(next)) {
+      callbackLose();
       finished = true;
       return;
     }

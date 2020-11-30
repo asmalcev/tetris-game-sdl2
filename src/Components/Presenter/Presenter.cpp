@@ -1,7 +1,8 @@
 #include "Presenter.hpp"
-#include "../TetrisEngine/Field.hpp"
 #include <iostream>
+#include "../TetrisEngine/Field.hpp"
 #include "../../Utils/Utils.hpp"
+#include "../LeaderBoardController/LeaderBoardController.hpp"
 
 constexpr int FIELD_WIDTH = 13;
 constexpr int FIELD_HEIGHT = 26;
@@ -44,6 +45,8 @@ Presenter::Presenter(
     fillFieldTexture();
     fillShapeTexture();
     fillCounterTexture();
+  }, [&]{
+    LeaderBoardController::getInstance()->addResult((char *) "aaalex", tetris->getScore());
   });
   fillFieldTexture();
   fillShapeTexture();
@@ -131,6 +134,8 @@ void Presenter::reload() {
     fillFieldTexture();
     fillShapeTexture();
     fillCounterTexture();
+  }, [&]{
+    LeaderBoardController::getInstance()->addResult((char *) "aaalex", tetris->getScore());
   });
   
   fillFieldTexture();

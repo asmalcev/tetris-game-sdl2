@@ -22,7 +22,7 @@ private:
   bool finished;
   int score;
   std::function<void()> callbackStep;
-  std::function<void()> callbackWin;
+  std::function<void()> callbackLose;
 
   shape reverseCols(shape s);
   shape transpose(shape s);
@@ -99,7 +99,8 @@ public:
   TetrisEngine(
     int x,
     int y,
-    std::function<void()> callback
+    std::function<void()> callbackStep,
+    std::function<void()> callbackLose
   );
   ~TetrisEngine();
   void update();
