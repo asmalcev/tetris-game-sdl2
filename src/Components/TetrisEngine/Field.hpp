@@ -14,6 +14,7 @@ struct Field {
   uchar getY();
   uchar& get(int xcoord, int ycoord);
   int fixCompletedLines();
+  void recolorize();
 
 private:
   uchar x;

@@ -53,6 +53,9 @@ int Field::fixCompletedLines() {
       }
     }
     if (flag) {
+      if (!countDeletedLines) {
+        recolorize();
+      }
       countDeletedLines++;
       matrix->remove(line);
       line = new uchar[x];
@@ -63,4 +66,20 @@ int Field::fixCompletedLines() {
     }
   }
   return countDeletedLines;
+}
+
+void Field::recolorize() {
+  Node * cur = matrix->head;
+  uchar * line;
+  for (int i = 0; i < y; i++, cur = cur->next) {
+    if (cur == nullptr) {
+      return;
+    }
+    line = cur->data;
+    for (int j = 0; j < x; j++) {
+      if (line[j]) {
+        line[j] = (line[j] + 1) % 5 + 1;
+      }
+    }
+  }
 }

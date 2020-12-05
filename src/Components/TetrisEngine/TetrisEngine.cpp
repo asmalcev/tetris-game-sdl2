@@ -13,7 +13,8 @@ TetrisEngine::TetrisEngine(
     finished(false),
     callbackStep(callbackStep),
     callbackLose(callbackLose),
-    score(0)
+    score(0),
+    stepDelay(16)
 {
   srand(time(0));
   cur = blocks[rand() % SHAPES_COUNT];
@@ -75,6 +76,9 @@ void TetrisEngine::update() {
       callbackLose();
       finished = true;
       return;
+    }
+    if (score > 1000) {
+      stepDelay = 8;
     }
     cur = next;
     curHeight = realSizeY(cur, &startHeightIndex);

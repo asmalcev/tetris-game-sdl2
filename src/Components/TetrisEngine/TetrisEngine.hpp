@@ -113,4 +113,6 @@ public:
   int realSizeX(shape s, int * startIndex);
   int realSizeY(shape s, int * startIndex);
   int getScore();
+
+  int stepDelay;
 };

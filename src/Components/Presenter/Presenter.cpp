@@ -90,7 +90,7 @@ void Presenter::render() {
 
 void Presenter::update() {
   timer++;
-  if (!(timer % 16)) tetris->update();
+  if (!(timer % tetris->stepDelay)) tetris->update();
 
   backBtn->update();
   nshape->render();
