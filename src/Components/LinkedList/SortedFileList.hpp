@@ -51,7 +51,6 @@ public:
   }
 
   ~SortedFileList() {
-    save();
     Node * tmp;
     while (head != nullptr) {
       tmp = head->next;

@@ -7,7 +7,6 @@
 #include "Components/Menu/Menu.hpp"
 #include "Components/Presenter/Presenter.hpp"
 #include "Components/LeaderBoard/LeaderBoard.hpp"
-#include "Components/LeaderBoardController/LeaderBoardController.hpp"
 #include "Components/Author/Author.hpp"
 
 int main() {
@@ -42,7 +41,6 @@ int main() {
   */
   SDL_Window * window2 = nullptr;
   SDL_Renderer * renderer2 = nullptr;
-  // SDL_OpenUrl
 
   /*
    *
@@ -71,7 +69,7 @@ int main() {
     [&currentWindow, &lboard]{
       if (currentWindow != &lboard) {
         currentWindow = &lboard;
-        LeaderBoardController::getInstance()->getBoard();
+        lboard.load();
       }
     }));
   menu.btns.push_back(new Button(renderer, (WINDOW_WIDTH - BUTTON_WIDTH) / 2, 260, BUTTON_WIDTH, BUTTON_HEIGHT, "AUTHOR",

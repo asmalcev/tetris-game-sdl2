@@ -1,12 +1,22 @@
 BINNAME = tetris_sdl2
 
-AUTHOR_DIR = ./src/Components/Author/
+BUILD_FLAGS = -lSDL2 -lSDL2_ttf
+
+MAIN_PATH         = ./src/main.cpp
+AUTHOR_DIR        = ./src/Components/Author
+MENU_DIR          = ./src/Components/Menu
+LEADERBOARD_DIR   = ./src/Components/LeaderBoard
+LEADERBOARD_C_DIR = ./src/Components/LeaderBoardController
+PRESENTER_DIR     = ./src/Components/Presenter
+BUTTON_DIR        = ./src/Components/Button
+ENGINE_DIR        = ./src/Components/TetrisEngine
+V_ELEMENT_DIR     = ./src/Components/VisibleElement
+LINK_DIR          = ./src/Components/Link
+LINKED_LIST_DIR   = ./src/Components/LinkedList
+UTILS_DIR         = ./src/Utils
 
 build:
-	g++ src/main.cpp src/Components/Button/*.cpp src/Components/Menu/*.cpp src/Components/Author/*.cpp src/Components/LeaderBoard/*.cpp src/Components/LeaderBoardController/*.cpp src/Components/Presenter/*.cpp src/Components/TetrisEngine/*.cpp src/Components/VisibleElement/*.cpp  src/Utils/*.cpp src/Components/Link/*.cpp src/Components/LinkedList/*.cpp -lSDL2 -lSDL2_ttf -o build/$(BINNAME)
-
-build-dev:
-	g++ src/main.cpp src/Components/Button/*.cpp src/Components/Menu/*.cpp src/Components/LeaderBoard/*.cpp src/Components/LeaderBoardController/*.cpp src/Components/Presenter/*.cpp src/Components/TetrisEngine/*.cpp src/Components/VisibleElement/*.cpp  src/Utils/*.cpp src/Components/Link/*.cpp src/Components/LinkedList/*.cpp -lSDL2 -lSDL2_ttf -o build/$(BINNAME)
+	g++ $(MAIN_PATH) $(AUTHOR_DIR)/*.cpp $(MENU_DIR)/*.cpp $(LEADERBOARD_DIR)/*.cpp $(LEADERBOARD_C_DIR)/*.cpp $(PRESENTER_DIR)/*.cpp $(BUTTON_DIR)/*.cpp $(ENGINE_DIR)/*.cpp $(V_ELEMENT_DIR)/*.cpp $(LINK_DIR)/*.cpp $(LINKED_LIST_DIR)/*.cpp $(UTILS_DIR)/*.cpp $(BUILD_FLAGS) -o build/$(BINNAME)
 
 run: build/$(BINNAME)
 	build/$(BINNAME)
@@ -14,6 +24,3 @@ run: build/$(BINNAME)
 all: build
 
 .PHONY: all run build clear
-
-author.o:
-	g++ AUTHOR_DIR/*.cpp -o AUTHOR_DIR/author.o

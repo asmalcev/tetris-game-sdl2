@@ -4,14 +4,14 @@
 
 class LeaderBoard : public Window {
 private:
-  SDL_Rect textPos;
-  SDL_Texture* leaderBoardTexture;
+  SDL_Rect textPos, dataPos;
+  SDL_Texture * textTexture, * boardTexture;
 
 public:
-  Button* backBtn;
+  Button * backBtn;
   
   LeaderBoard(
-    SDL_Renderer* renderer,
+    SDL_Renderer * renderer,
     int x,
     int y,
     int w,
@@ -23,4 +23,5 @@ public:
   void click(int x, int y) override;
   void hover(int x, int y) override;
   void keyEvent(SDL_Event&) override {};
+  void load();
 };

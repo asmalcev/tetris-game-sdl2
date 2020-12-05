@@ -35,5 +35,5 @@ public:
   ~LeaderBoardController();
   static LeaderBoardController * getInstance();
   void addResult(char *, int);
-  SDL_Texture * getBoard();
+  SDL_Surface * getBoard(SDL_Rect);
 };
