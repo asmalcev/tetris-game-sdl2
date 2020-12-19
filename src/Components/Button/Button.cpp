@@ -22,7 +22,12 @@ Button::Button(
   SDL_Rect dst = {1, 1, box.w - 2, box.h - 2};
   SDL_FillRect(surf, &dst, 0x212121);
   int tw, th;
-  textSurf = renderText(text, {245, 245, 245}, 16, "docs/RobotoMono-Regular.ttf", &tw, &th);
+  textSurf = renderText(
+    text,
+    {245, 245, 245},
+    16, "docs/RobotoMono-Regular.ttf",
+    &tw, &th
+  );
   dst.x = (box.w - tw) / 2;
   dst.y = (box.h - th) / 2;
   SDL_BlitSurface(textSurf, NULL, surf, &dst);
@@ -37,8 +42,8 @@ Button::~Button() {
 }
 
 void Button::render() {
-  SDL_SetRenderDrawColor( renderer, 245, 245, 245, 255 );
-  SDL_RenderFillRect( renderer, &box );
+  SDL_SetRenderDrawColor(renderer, 245, 245, 245, 255);
+  SDL_RenderFillRect(renderer, &box);
 
   offset = 4 + 6.0 / 100 * transitionTimer;
   SDL_Rect displacedBox = { box.x - offset, box.y - offset, box.w, box.h };
@@ -79,4 +84,9 @@ bool Button::click(int x, int y) {
   }
   bs = ButtonState::NORMAL;
   return false;
+}
+
+void Button::displaceBox(int x, int y) {
+  box.x = x;
+  box.y = y;
 }

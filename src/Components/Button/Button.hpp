@@ -35,5 +35,6 @@ public:
   void update();
   bool hover(int x, int y);
   bool click(int x, int y);
+  void displaceBox(int x, int y);
 
 };

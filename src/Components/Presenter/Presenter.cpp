@@ -18,7 +18,10 @@ Presenter::Presenter(
   int y,
   int w,
   int h
-) : Window(renderer, x, y, w, h), timer(0), fieldTexture(nullptr) {
+) : Window(renderer, x, y, w, h),
+    timer(0),
+    fieldTexture(nullptr),
+    isModalOpened(true) {
   fieldBox = {
     HORIZONTAL_PADDING,
     72,
@@ -55,6 +58,7 @@ Presenter::Presenter(
 
 Presenter::~Presenter() {
   delete backBtn;
+  delete modalWindow;
   delete tetris;
   SDL_DestroyTexture(fieldTexture);
   delete nshape;
@@ -89,42 +93,56 @@ void Presenter::render() {
 }
 
 void Presenter::update() {
-  timer++;
-  if (!(timer % tetris->stepDelay)) tetris->update();
-
   backBtn->update();
   nshape->render();
   counter->render();
   render();
+  
+  if (isModalOpened && modalWindow) {
+    modalWindow->update();
+  } else {
+    timer++;
+    if (!(timer % tetris->stepDelay)) tetris->update();
+  }
 }
 
 void Presenter::click(int x, int y) {
-
-  backBtn->click(x, y);
+  if (isModalOpened && modalWindow) {
+    modalWindow->click(x, y);
+  } else {
+    backBtn->click(x, y);
+  }
 }
 
 void Presenter::hover(int x, int y) {
-
-  backBtn->hover(x,y);
+  if (isModalOpened && modalWindow) {
+    modalWindow->hover(x, y);
+  } else {
+    backBtn->hover(x,y);
+  }
 }
 
 void Presenter::keyEvent(SDL_Event& e) {
-  switch (e.key.keysym.sym) {
-  case SDLK_LEFT:
-    tetris->displaceCur(-1);
-    break;
-  case SDLK_RIGHT:
-    tetris->displaceCur(1);
-    break;
-  case SDLK_DOWN:
-    tetris->update();
-    break;
-  case SDLK_SPACE:
-    tetris->rotate();
-    break;
-  case SDLK_ESCAPE:
-    tetris->togglePause();
-    break;
+  if (isModalOpened && modalWindow) {
+    modalWindow->keyEvent(e);
+  } else {
+    switch (e.key.keysym.sym) {
+      case SDLK_LEFT:
+        tetris->displaceCur(-1);
+        break;
+      case SDLK_RIGHT:
+        tetris->displaceCur(1);
+        break;
+      case SDLK_DOWN:
+        tetris->update();
+        break;
+      case SDLK_SPACE:
+        tetris->rotate();
+        break;
+      case SDLK_ESCAPE:
+        tetris->togglePause();
+        break;
+    }
   }
 }
 

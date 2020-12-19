@@ -1,17 +1,19 @@
 #pragma once
 #include "../Window/Window.hpp"
 #include "../Button/Button.hpp"
+#include "../Modal/Modal.hpp"
 #include "../TetrisEngine/TetrisEngine.hpp"
 #include "../VisibleElement/VisibleElement.hpp"
 
 class Presenter : public Window {
 private:
-  TetrisEngine * tetris;
-  SDL_Rect fieldBox;
-  int timer;
-  SDL_Texture * fieldTexture;
+  TetrisEngine   * tetris;
   VisibleElement * nshape;
   VisibleElement * counter;
+  SDL_Texture    * fieldTexture;
+  SDL_Rect fieldBox;
+  int timer;
+  bool isModalOpened;
 
   const SDL_Color colors[5] = {
     {245, 245, 245},
@@ -26,10 +28,11 @@ private:
   void fillCounterTexture();
 
 public:
-  Button * backBtn = nullptr;
+  Button * backBtn     = nullptr;
+  Modal  * modalWindow = nullptr;
 
   Presenter(
-    SDL_Renderer* renderer,
+    SDL_Renderer * renderer,
     int x,
     int y,
     int w,

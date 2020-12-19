@@ -77,7 +77,10 @@ void TetrisEngine::update() {
       finished = true;
       return;
     }
-    if (score > 1000) {
+    if (score >= 1000) {
+      stepDelay = 12;
+    }
+    if (score >= 2000) {
       stepDelay = 8;
     }
     cur = next;

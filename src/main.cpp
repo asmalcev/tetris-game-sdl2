@@ -4,6 +4,7 @@
 
 #include "include.hpp"
 #include "Components/Button/Button.hpp"
+#include "Components/TextField/TextField.hpp"
 #include "Components/Menu/Menu.hpp"
 #include "Components/Presenter/Presenter.hpp"
 #include "Components/LeaderBoard/LeaderBoard.hpp"
@@ -32,7 +33,9 @@ int main() {
     SDL_Quit();
     return 1;
   }
+  SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
   SDL_SetWindowTitle(window, "Tetris");
+  SDL_SetWindowIcon(window, SDL_LoadBMP("../docs/tetris-logo.bmp"));
   // SDL_ShowCursor(1); -- use in future to change cursor mb
 
   /*
@@ -81,6 +84,7 @@ int main() {
           return 1;
         }
         SDL_SetWindowTitle(window2, "Author");
+        SDL_SetWindowIcon(window2, SDL_LoadBMP("../docs/tetris-logo.bmp"));
 
         SDL_SetRenderDrawColor( renderer2, 33, 33, 33, 255 );
         SDL_RenderClear(renderer2);
@@ -100,6 +104,73 @@ int main() {
       }
   });
 
+  pres.modalWindow = new Modal(
+    renderer,
+    400, 160,
+    "You lost. Introduce yourself:",
+    new Button(renderer,
+      0, 0, 50, BUTTON_HEIGHT, "MAIN",
+      [&currentWindow, &menu]() {
+        if (currentWindow != &menu) {
+          currentWindow = &menu;
+        }
+      }
+    ),
+    new TextField(renderer,
+      0, 0, 262, BUTTON_HEIGHT, "Username...",
+      [](
+        std::string& inputValue,
+        SDL_Event& e,
+        int& letterOffset
+      ) {
+        SDL_Keycode key = e.key.keysym.sym;
+        std::size_t strSize = inputValue.size();
+        if ('a' <= key && key <= 'z') {
+          if (strSize < 12) {
+            if (
+              e.key.keysym.mod == KMOD_RSHIFT ||
+              e.key.keysym.mod == KMOD_LSHIFT
+            ) {
+              inputValue += key + ('A' - 'a');
+            } else {
+              inputValue += key;
+            }
+          }
+        } else if ('0' <= key && key <= '9') {
+          if (strSize < 12) {
+            inputValue += key;
+          }
+        } else {
+          switch (key) {
+            case SDLK_BACKSPACE: {
+              if (strSize > 0) {
+                inputValue.erase(strSize - 1);
+              }
+              break;
+            }
+            case SDLK_LEFT: {
+              if (strSize > -letterOffset) {
+                letterOffset--;
+              }
+              break;
+            }
+            case SDLK_RIGHT: {
+              if (letterOffset < 0) {
+                letterOffset++;
+              }
+              break;
+            }
+            case SDLK_DOWN:
+              break;
+            case SDLK_SPACE:
+              break;
+            case SDLK_ESCAPE:
+              break;
+          }
+        }
+      })
+  );
+
   lboard.backBtn = new Button(renderer, 24, 24, 50, BUTTON_HEIGHT, "BACK",
     [&currentWindow, &menu]() {
       if (currentWindow != &menu) {
@@ -107,9 +178,8 @@ int main() {
       }
   });
 
-  currentWindow = &menu;
-  // currentWindow = &pres;
-  // currentWindow = &lboard;
+  // currentWindow = &menu;
+  currentWindow = &pres;
 
   while (running) {
     SDL_SetRenderDrawColor(renderer, 33, 33, 33, 255);
