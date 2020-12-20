@@ -73,11 +73,20 @@ void Presenter::render() {
   SDL_RenderCopy(renderer, fieldTexture, NULL, &fieldBox);
   curBox = {0, 0, CELL_SIZE, CELL_SIZE};
   shape s = tetris->getCur();
+  SDL_Rect verticalLine = {0, fieldBox.y, CELL_SIZE, fieldBox.h};
+  bool filledLine[s.size] = {false};
   for (int i = 0; i < s.size; i++) {
     for (int j = 0; j < s.size; j++) {
       if (s.matrix[i][j]) {
         curBox.x = fieldBox.x + (s.x + j) * CELL_SIZE;
         curBox.y = fieldBox.y + (s.y + i) * CELL_SIZE;
+
+        if (!filledLine[j]) {
+          filledLine[j] = true;
+          verticalLine.x = curBox.x;
+          SDL_SetRenderDrawColor(renderer, 245, 245, 245, 16);
+          SDL_RenderFillRect(renderer, &verticalLine);
+        }
         SDL_SetRenderDrawColor(
           renderer,
           colors[s.color].r,
@@ -127,21 +136,33 @@ void Presenter::keyEvent(SDL_Event& e) {
     modalWindow->keyEvent(e);
   } else {
     switch (e.key.keysym.sym) {
-      case SDLK_LEFT:
+      case SDLK_LEFT: {
         tetris->displaceCur(-1);
         break;
-      case SDLK_RIGHT:
+      }
+      case SDLK_RIGHT: {
         tetris->displaceCur(1);
         break;
-      case SDLK_DOWN:
-        tetris->update();
+      }
+      case SDLK_DOWN: {
+        if (
+          e.key.keysym.mod == KMOD_LCTRL ||
+          e.key.keysym.mod == KMOD_RCTRL
+        ) {
+          tetris->slideDown();
+        } else {
+          tetris->update();
+        }
         break;
-      case SDLK_SPACE:
+      }
+      case SDLK_SPACE: {
         tetris->rotate();
         break;
-      case SDLK_ESCAPE:
+      }
+      case SDLK_ESCAPE: {
         tetris->togglePause();
         break;
+      }
     }
   }
 }

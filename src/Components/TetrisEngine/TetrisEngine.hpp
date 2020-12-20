@@ -103,7 +103,7 @@ public:
     std::function<void()> callbackLose
   );
   ~TetrisEngine();
-  void update();
+  bool update();
   void rotate();
   Field * getField();
   shape getCur();
@@ -113,6 +113,7 @@ public:
   int realSizeX(shape s, int * startIndex);
   int realSizeY(shape s, int * startIndex);
   int getScore();
+  void slideDown();
 
   int stepDelay;
 };

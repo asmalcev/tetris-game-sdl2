@@ -56,8 +56,8 @@ shape TetrisEngine::transpose(shape s) {
   return tmp;
 }
 
-void TetrisEngine::update() {
-  if (paused || finished) return;
+bool TetrisEngine::update() {
+  if (paused || finished) return true;
 
   shape tmp = cur;
   tmp.y++;
@@ -75,7 +75,7 @@ void TetrisEngine::update() {
     if (!check(next)) {
       callbackLose();
       finished = true;
-      return;
+      return true;
     }
     if (score >= 1000) {
       stepDelay = 12;
@@ -92,7 +92,9 @@ void TetrisEngine::update() {
     next.x = ((int) field->getX() - next.size) / 2;
     next.y = 0;
     callbackStep();
+    return true;
   }
+  return false;
 }
 
 void TetrisEngine::togglePause() {
@@ -192,4 +194,10 @@ int TetrisEngine::realSizeX(shape s, int* startIndex) {
 
 int TetrisEngine::getScore() {
   return score;
+}
+
+void TetrisEngine::slideDown() {
+  while (!update()) {
+
+  }
 }
