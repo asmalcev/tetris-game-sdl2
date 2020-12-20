@@ -109,7 +109,7 @@ int main() {
     400, 160,
     "You lost. Introduce yourself:",
     new Button(renderer,
-      0, 0, 50, BUTTON_HEIGHT, "MAIN",
+      0, 0, BUTTON_WIDTH, BUTTON_HEIGHT, "SAVE&GO MAIN",
       [&currentWindow, &menu]() {
         if (currentWindow != &menu) {
           currentWindow = &menu;
@@ -117,7 +117,7 @@ int main() {
       }
     ),
     new TextField(renderer,
-      0, 0, 262, BUTTON_HEIGHT, "Username...",
+      0, 0, 150, BUTTON_HEIGHT, "Username...",
       [](
         std::string& inputValue,
         SDL_Event& e,
@@ -131,41 +131,52 @@ int main() {
               e.key.keysym.mod == KMOD_RSHIFT ||
               e.key.keysym.mod == KMOD_LSHIFT
             ) {
-              inputValue += key + ('A' - 'a');
+              inputValue.insert(strSize - letterOffset, 1, key + ('A' - 'a'));
             } else {
-              inputValue += key;
+              inputValue.insert(strSize - letterOffset, 1, key);
             }
           }
         } else if ('0' <= key && key <= '9') {
           if (strSize < 12) {
-            inputValue += key;
+            inputValue.insert(strSize - letterOffset, 1, key);
           }
         } else {
           switch (key) {
             case SDLK_BACKSPACE: {
-              if (strSize > 0) {
-                inputValue.erase(strSize - 1);
+              if (
+                strSize > 0 &&
+                strSize > letterOffset
+              ) {
+                inputValue.erase(strSize - letterOffset - 1, 1);
               }
               break;
             }
             case SDLK_LEFT: {
-              if (strSize > -letterOffset) {
-                letterOffset--;
-              }
-              break;
-            }
-            case SDLK_RIGHT: {
-              if (letterOffset < 0) {
+              if (strSize > letterOffset) {
                 letterOffset++;
               }
               break;
             }
-            case SDLK_DOWN:
+            case SDLK_RIGHT: {
+              if (letterOffset > 0) {
+                letterOffset--;
+              }
               break;
-            case SDLK_SPACE:
+            }
+            case SDLK_UP: {
+              letterOffset = strSize;
               break;
-            case SDLK_ESCAPE:
+            }
+            case SDLK_DOWN: {
+              letterOffset = 0;
               break;
+            }
+            case SDLK_SPACE: {
+              if (strSize < 12) {
+                inputValue.insert(strSize - letterOffset, 1, key);
+              }
+              break;
+            }
           }
         }
       })
@@ -178,8 +189,7 @@ int main() {
       }
   });
 
-  // currentWindow = &menu;
-  currentWindow = &pres;
+  currentWindow = &menu;
 
   while (running) {
     SDL_SetRenderDrawColor(renderer, 33, 33, 33, 255);

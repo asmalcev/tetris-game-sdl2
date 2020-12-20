@@ -10,9 +10,9 @@ private:
   SDL_Texture * modalTexture;
   Button      * backBtn   = nullptr;
   TextField   * textField = nullptr;
+  int lastScoreResult;
 
 public:
-
   Modal(
     SDL_Renderer * renderer,
     int w,
@@ -27,4 +27,6 @@ public:
   void click(int x, int y) override;
   void hover(int x, int y) override;
   void keyEvent(SDL_Event&) override;
+  void setLastScoreResult(int);
+
 };

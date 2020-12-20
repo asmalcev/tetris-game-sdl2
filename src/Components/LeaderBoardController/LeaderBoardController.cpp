@@ -20,7 +20,7 @@ LeaderBoardController * LeaderBoardController::getInstance() {
   return instance;
 }
 
-void LeaderBoardController::addResult(char * name, int score) {
+void LeaderBoardController::addResult(const char * name, int score) {
   sflp->addData(ResultNote(name, score));
   sflp->save();
 }

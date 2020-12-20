@@ -1,6 +1,5 @@
 #include "TextField.hpp"
 #include "../../Utils/Utils.hpp"
-#include <iostream>
 
 TextField::TextField(
   SDL_Renderer* renderer,
@@ -45,7 +44,12 @@ TextField::~TextField() {
 void TextField::render() {
   if (tfs == TextFieldState::FOCUSED) {
     SDL_Rect outlineBox = { box.x - 2, box.y - 2, box.w + 4, box.h + 4 };
-    SDL_SetRenderDrawColor(renderer, 229, 57, 53, 255);
+    SDL_SetRenderDrawColor(renderer, 30, 136, 229, 255);
+    SDL_RenderDrawRect(renderer, &outlineBox);
+    outlineBox.x++;
+    outlineBox.y++;
+    outlineBox.w -= 2;
+    outlineBox.h -= 2;
     SDL_RenderDrawRect(renderer, &outlineBox);
   }
 
@@ -75,20 +79,21 @@ void TextField::render() {
     SDL_RenderCopy(renderer, placeholderTexture, NULL, &textBox);
   }
 
-  if (tfs == TextFieldState::FOCUSED) {
+  if (tfs == TextFieldState::FOCUSED && timer % 48 > 8) {
     int tw, th;
     textSize(
-      value.substr(0, value.size() - 1 + letterOffset).c_str(),
+      value.substr(0, value.size() - letterOffset).c_str(),
       16, "docs/RobotoMono-Regular.ttf",
       &tw, &th
     );
-    SDL_Rect line = { textBox.x + 4 + tw, textBox.y - 1, 1, th + 1};
+    SDL_Rect line = { textBox.x + tw, textBox.y - 1, 1, th + 1};
     SDL_SetRenderDrawColor(renderer, 245, 245, 245, 255);
     SDL_RenderDrawRect(renderer, &line);
   }
 }
 
 void TextField::update() {
+  timer++;
   render();
 }
 
@@ -107,6 +112,9 @@ bool TextField::click(int x, int y) {
     x >= box.x && x <= box.x + box.w &&
     y >= box.y && y <= box.y + box.h
   ) {
+    size_t strSize = value.size();
+    size_t clickedLetter = (x - box.x + 4) / 10;
+    letterOffset = clickedLetter > strSize ? 0 : strSize - clickedLetter;
     tfs = TextFieldState::FOCUSED;
     return true;
   }

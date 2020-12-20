@@ -2,7 +2,6 @@
 #include <iostream>
 #include "../TetrisEngine/Field.hpp"
 #include "../../Utils/Utils.hpp"
-#include "../LeaderBoardController/LeaderBoardController.hpp"
 
 constexpr int FIELD_WIDTH = 13;
 constexpr int FIELD_HEIGHT = 26;
@@ -21,7 +20,7 @@ Presenter::Presenter(
 ) : Window(renderer, x, y, w, h),
     timer(0),
     fieldTexture(nullptr),
-    isModalOpened(true) {
+    isModalOpened(false) {
   fieldBox = {
     HORIZONTAL_PADDING,
     72,
@@ -49,7 +48,8 @@ Presenter::Presenter(
     fillShapeTexture();
     fillCounterTexture();
   }, [&]{
-    LeaderBoardController::getInstance()->addResult((char *) "aaalex", tetris->getScore());
+    isModalOpened = true;
+    modalWindow->setLastScoreResult(tetris->getScore());
   });
   fillFieldTexture();
   fillShapeTexture();
@@ -153,12 +153,14 @@ void Presenter::reload() {
     fillShapeTexture();
     fillCounterTexture();
   }, [&]{
-    LeaderBoardController::getInstance()->addResult((char *) "aaalex", tetris->getScore());
+    isModalOpened = true;
+    modalWindow->setLastScoreResult(tetris->getScore());
   });
   
   fillFieldTexture();
   fillShapeTexture();
   fillCounterTexture();
+  isModalOpened = false;
 }
 
 void Presenter::fillFieldTexture() {

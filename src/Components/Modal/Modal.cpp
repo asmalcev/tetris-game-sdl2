@@ -1,7 +1,8 @@
 #include "Modal.hpp"
+#include <string>
 #include "../../Utils/Utils.hpp"
-#include <iostream>
 #include "../../include.hpp"
+#include "../LeaderBoardController/LeaderBoardController.hpp"
 
 Modal::Modal(
     SDL_Renderer * renderer,
@@ -36,7 +37,7 @@ Modal::Modal(
   SDL_FreeSurface(textSurf);
   SDL_FreeSurface(surf);
 
-  backBtn->displaceBox(box.x + box.w - 86, box.y + box.h - 72);
+  backBtn->displaceBox(box.x + box.w - 196, box.y + box.h - 72);
   textField->displaceBox(box.x + 36, box.y + box.h - 72);
 }
 
@@ -60,7 +61,12 @@ void Modal::update() {
 }
 
 void Modal::click(int x, int y) {
-  if (backBtn->click(x, y)) return;
+  if (backBtn->click(x, y)) {
+    std::string name = textField->getValue();
+    if (name.empty()) name = "unnamed";
+    LeaderBoardController::getInstance()->addResult(name.c_str(), lastScoreResult);
+    return;
+  }
   textField->click(x, y);
 }
 
@@ -70,4 +76,8 @@ void Modal::hover(int x, int y) {
 
 void Modal::keyEvent(SDL_Event& e) {
   textField->keyEvent(e);
+}
+
+void Modal::setLastScoreResult(int lastScore) {
+  lastScoreResult = lastScore;
 }
