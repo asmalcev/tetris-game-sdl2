@@ -20,7 +20,8 @@ Presenter::Presenter(
 ) : Window(renderer, x, y, w, h),
     timer(0),
     fieldTexture(nullptr),
-    isModalOpened(false) {
+    isModalOpened(false),
+    isDownBtnPressed(false) {
   fieldBox = {
     HORIZONTAL_PADDING,
     72,
@@ -135,37 +136,51 @@ void Presenter::hover(int x, int y) {
 }
 
 void Presenter::keyEvent(SDL_Event& e) {
-  if (isModalOpened && modalWindow) {
-    modalWindow->keyEvent(e);
-  } else {
-    switch (e.key.keysym.sym) {
-      case SDLK_LEFT: {
-        tetris->displaceCur(-1);
-        break;
-      }
-      case SDLK_RIGHT: {
-        tetris->displaceCur(1);
-        break;
-      }
-      case SDLK_DOWN: {
-        if (
-          e.key.keysym.mod == KMOD_LCTRL ||
-          e.key.keysym.mod == KMOD_RCTRL
-        ) {
-          tetris->slideDown();
-        } else {
-          tetris->update();
+  if (e.type == SDL_KEYUP) {
+    if (isModalOpened && modalWindow) {
+      modalWindow->keyEvent(e);
+    } else {
+      switch (e.key.keysym.sym) {
+        case SDLK_LEFT: {
+          tetris->displaceCur(-1);
+          break;
         }
-        break;
+        case SDLK_RIGHT: {
+          tetris->displaceCur(1);
+          break;
+        }
+        case SDLK_DOWN: {
+          if (
+            e.key.keysym.mod == KMOD_LCTRL ||
+            e.key.keysym.mod == KMOD_RCTRL
+          ) {
+            tetris->slideDown();
+          } else {
+            if (isDownBtnPressed) {
+              tetris->toggleSpeedUp();
+              isDownBtnPressed = false;
+            }
+          }
+          break;
+        }
+        case SDLK_SPACE: {
+          tetris->rotate();
+          break;
+        }
+        case SDLK_ESCAPE: {
+          tetris->togglePause();
+          break;
+        }
       }
-      case SDLK_SPACE: {
-        tetris->rotate();
-        break;
-      }
-      case SDLK_ESCAPE: {
-        tetris->togglePause();
-        break;
-      }
+    }
+  } else if (e.type == SDL_KEYDOWN) {
+    if (
+      e.key.keysym.sym == SDLK_DOWN &&
+      e.key.keysym.mod == KMOD_NONE &&
+      !isDownBtnPressed
+    ) {
+      tetris->toggleSpeedUp();
+      isDownBtnPressed = true;
     }
   }
 }
@@ -184,7 +199,8 @@ void Presenter::reload() {
   fillFieldTexture();
   fillShapeTexture();
   fillCounterTexture();
-  isModalOpened = false;
+  isModalOpened    = false;
+  isDownBtnPressed = false;
 }
 
 void Presenter::fillFieldTexture() {

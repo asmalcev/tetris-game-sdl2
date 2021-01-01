@@ -14,6 +14,7 @@ private:
   SDL_Rect fieldBox;
   int timer;
   bool isModalOpened;
+  bool isDownBtnPressed;
 
   const SDL_Color colors[5] = {
     {245, 245, 245},

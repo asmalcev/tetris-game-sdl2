@@ -14,20 +14,21 @@ TetrisEngine::TetrisEngine(
     callbackStep(callbackStep),
     callbackLose(callbackLose),
     score(0),
-    stepDelay(16)
+    stepDelay(16),
+    isSpeedUp(false)
 {
   srand(time(0));
-  cur = blocks[rand() % SHAPES_COUNT];
+  cur       = blocks[rand() % SHAPES_COUNT];
   cur.color = rand() % 5;
-  cur.x = (x - cur.size) / 2;
+  cur.x     = (x - cur.size) / 2;
 
-  next = blocks[rand() % SHAPES_COUNT];
+  next       = blocks[rand() % SHAPES_COUNT];
   next.color = rand() % 5;
-  next.x = (x - next.size) / 2;
-  next.y = 0;
+  next.x     = (x - next.size) / 2;
+  next.y     = 1;
 
   curHeight = realSizeY(cur, &startHeightIndex);
-  cur.y = 0;
+  cur.y     = 1;
 }
 
 TetrisEngine::~TetrisEngine() {
@@ -90,7 +91,7 @@ bool TetrisEngine::update() {
     next = blocks[rand() % SHAPES_COUNT];
     next.color = rand() % 5;
     next.x = ((int) field->getX() - next.size) / 2;
-    next.y = 0;
+    next.y = 1;
     callbackStep();
     return true;
   }
@@ -197,7 +198,15 @@ int TetrisEngine::getScore() {
 }
 
 void TetrisEngine::slideDown() {
-  while (!update()) {
+  while (!update());
+}
 
+bool TetrisEngine::toggleSpeedUp() {
+  if (isSpeedUp) {
+    stepDelay *= 4;
+  } else {
+    stepDelay /= 4;
   }
+  isSpeedUp = !isSpeedUp;
+  return isSpeedUp;
 }

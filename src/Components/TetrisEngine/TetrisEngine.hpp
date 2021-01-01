@@ -20,6 +20,7 @@ private:
   int startHeightIndex;
   bool paused;
   bool finished;
+  bool isSpeedUp;
   int score;
   std::function<void()> callbackStep;
   std::function<void()> callbackLose;
@@ -114,6 +115,7 @@ public:
   int realSizeY(shape s, int * startIndex);
   int getScore();
   void slideDown();
+  bool toggleSpeedUp();
 
   int stepDelay;
 };

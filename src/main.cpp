@@ -212,7 +212,7 @@ int main() {
         if (e.type == SDL_MOUSEMOTION) {
           currentWindow->hover(e.motion.x, e.motion.y);
         }
-        if (e.type == SDL_KEYUP) {
+        if (e.type == SDL_KEYUP || e.type == SDL_KEYDOWN) {
           currentWindow->keyEvent(e);
         }
       } else if (window2 != nullptr) {
