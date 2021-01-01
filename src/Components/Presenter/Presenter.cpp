@@ -75,11 +75,14 @@ void Presenter::render() {
   shape s = tetris->getCur();
   SDL_Rect verticalLine = {0, fieldBox.y, CELL_SIZE, fieldBox.h};
   bool filledLine[s.size] = {false};
+  const int offsetY =
+    CELL_SIZE - (int) ((timer % tetris->stepDelay) * 1.0 / tetris->stepDelay * CELL_SIZE);
+
   for (int i = 0; i < s.size; i++) {
     for (int j = 0; j < s.size; j++) {
       if (s.matrix[i][j]) {
         curBox.x = fieldBox.x + (s.x + j) * CELL_SIZE;
-        curBox.y = fieldBox.y + (s.y + i) * CELL_SIZE;
+        curBox.y = fieldBox.y + (s.y + i) * CELL_SIZE - offsetY;
 
         if (!filledLine[j]) {
           filledLine[j] = true;
