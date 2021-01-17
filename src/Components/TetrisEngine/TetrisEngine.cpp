@@ -3,6 +3,9 @@
 #include <ctime>
 #include <cmath>
 
+#define FST_BORDER 1000
+#define SND_BORDER 2000
+
 TetrisEngine::TetrisEngine(
   int x,
   int y,
@@ -78,10 +81,10 @@ bool TetrisEngine::update() {
       finished = true;
       return true;
     }
-    if (score >= 1000) {
+    if (score >= FST_BORDER) {
       stepDelay = 12;
     }
-    if (score >= 2000) {
+    if (score >= SND_BORDER) {
       stepDelay = 8;
     }
     cur = next;
