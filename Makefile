@@ -2,7 +2,7 @@ BINNAME = tetris_sdl2
 
 BUILD_FLAGS = -lSDL2 -lSDL2_ttf
 
-MAIN_PATH         = ./src/main.cpp
+MAIN_PATH         = ./src
 AUTHOR_DIR        = ./src/Components/Author
 MENU_DIR          = ./src/Components/Menu
 MODAL_DIR         = ./src/Components/Modal
@@ -17,12 +17,65 @@ LINK_DIR          = ./src/Components/Link
 LINKED_LIST_DIR   = ./src/Components/LinkedList
 UTILS_DIR         = ./src/Utils
 
-build:
-	g++ $(MAIN_PATH) $(AUTHOR_DIR)/*.cpp $(MENU_DIR)/*.cpp $(MODAL_DIR)/*.cpp $(LEADERBOARD_DIR)/*.cpp $(LEADERBOARD_C_DIR)/*.cpp $(PRESENTER_DIR)/*.cpp $(BUTTON_DIR)/*.cpp $(TEXT_FIELD_DIR)/*.cpp $(ENGINE_DIR)/*.cpp $(V_ELEMENT_DIR)/*.cpp $(LINK_DIR)/*.cpp $(LINKED_LIST_DIR)/*.cpp $(UTILS_DIR)/*.cpp $(BUILD_FLAGS) -o build/$(BINNAME)
+BUILD_DIR = ./build
 
-run: build/$(BINNAME)
-	build/$(BINNAME)
+build: $(BUILD_DIR)/main.o $(BUILD_DIR)/author.o $(BUILD_DIR)/menu.o $(BUILD_DIR)/modal.o $(BUILD_DIR)/leaderboard.o $(BUILD_DIR)/leaderboardcontroller.o $(BUILD_DIR)/presenter.o $(BUILD_DIR)/button.o $(BUILD_DIR)/textfield.o $(BUILD_DIR)/engine.o $(BUILD_DIR)/velement.o $(BUILD_DIR)/link.o $(BUILD_DIR)/linkedlist.o $(BUILD_DIR)/utils.o $(BUILD_DIR)/fallingpoints.o $(BUILD_DIR)/field.o
+	g++ $^ $(BUILD_FLAGS) -o $(BUILD_DIR)/$(BINNAME)
+
+$(BUILD_DIR)/main.o: $(MAIN_PATH)/*.cpp
+	g++ $(BUILD_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/author.o: $(AUTHOR_DIR)/*.cpp
+	g++ $(BUILD_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/menu.o: $(MENU_DIR)/Menu.cpp
+	g++ $(BUILD_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/fallingpoints.o: $(MENU_DIR)/FallingPoint.cpp
+	g++ $(BUILD_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/modal.o: $(MODAL_DIR)/*.cpp
+	g++ $(BUILD_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/leaderboard.o: $(LEADERBOARD_DIR)/*.cpp
+	g++ $(BUILD_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/leaderboardcontroller.o: $(LEADERBOARD_C_DIR)/*.cpp
+	g++ $(BUILD_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/presenter.o: $(PRESENTER_DIR)/*.cpp
+	g++ $(BUILD_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/button.o: $(BUTTON_DIR)/*.cpp
+	g++ $(BUILD_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/textfield.o: $(TEXT_FIELD_DIR)/*.cpp
+	g++ $(BUILD_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/engine.o: $(ENGINE_DIR)/TetrisEngine.cpp
+	g++ $(BUILD_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/field.o: $(ENGINE_DIR)/Field.cpp
+	g++ $(BUILD_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/velement.o: $(V_ELEMENT_DIR)/*.cpp
+	g++ $(BUILD_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/link.o: $(LINK_DIR)/*.cpp
+	g++ $(BUILD_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/linkedlist.o: $(LINKED_LIST_DIR)/*.cpp
+	g++ $(BUILD_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/utils.o: $(UTILS_DIR)/*.cpp
+	g++ $(BUILD_FLAGS) -c $< -o $@
+
+run: $(BUILD_DIR)/$(BINNAME)
+	$(BUILD_DIR)/$(BINNAME)
 
 all: build
 
-.PHONY: all run build clear
+clean:
+	rm -rf $(BUILD_DIR)/*
+
+.PHONY: all run build clean

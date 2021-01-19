@@ -197,7 +197,5 @@ int TetrisEngine::getScore() {
 }
 
 void TetrisEngine::slideDown() {
-  while (!update()) {
-
-  }
+  while (!update());
 }
